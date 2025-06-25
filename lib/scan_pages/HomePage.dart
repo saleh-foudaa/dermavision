@@ -51,7 +51,7 @@ class _HomepageState extends State<Homepage> {
       MaterialPageRoute(
         builder: (_) => DermatitisLocationScreen(
             image: imageFile,
-            historyManager: _historyManager), // مرر الـ historyManager
+            historyManager: _historyManager),
       ),
     );
   }

@@ -354,7 +354,7 @@ class _SkinInformationScreenState extends State<SkinInformation> {
         child: LayoutBuilder(
           builder: (context, constraints) {
             return SingleChildScrollView(
-              padding: const EdgeInsets.only(bottom: 100), // عشان البوتوم بار
+              padding: const EdgeInsets.only(bottom: 100),
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                   minHeight: constraints.maxHeight,

@@ -30,7 +30,6 @@ import 'guide_pages/page1.dart';
 import 'guide_pages/page2.dart';
 import 'guide_pages/page3.dart';
 import 'step_Pages/step5.dart';
-import 'step_Pages/step9.dart';
 
 void main() {
   runApp(ResponsiveSizer(builder: (context, orientation, screenType) {

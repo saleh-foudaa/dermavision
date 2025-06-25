@@ -12,43 +12,36 @@ class auth_social_logins extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.06,
-      width: MediaQuery.of(context).size.width * 02,
       decoration: BoxDecoration(
-        color: Color.fromARGB(255, 255, 255, 255),
+        color: const Color.fromARGB(255, 255, 255, 255),
         border: Border.all(color: Colors.black12),
         borderRadius: BorderRadius.circular(30),
       ),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.07,
-            width: MediaQuery.of(context).size.width * 0.07,
-            child: Image.asset(
-              logo,
-              filterQuality: FilterQuality.high,
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.03,
+                width: MediaQuery.of(context).size.width * 0.06,
+                child: Image.asset(
+                  logo,
+                  filterQuality: FilterQuality.high,
+                ),
+              ),
             ),
-          ),
-        ),
-        Expanded(
-          child: Align(
-            alignment: Alignment.center,
-            child: Text(
+            Text(
               text,
               style: GoogleFonts.poppins(
                 fontSize: 16.sp,
-                color: Color.fromARGB(255, 44, 44, 44),
-                fontWeight: FontWeight.w400,
+                color: const Color.fromARGB(255, 44, 44, 44),
+                fontWeight: FontWeight.w500,
               ),
             ),
-          ),
-        ),
-        Container(
-          height: 10,
-          width: 10,
-          color: Color.fromARGB(255, 255, 255, 255),
-        )
-      ]),
+            const SizedBox(width: 10),
+          ]),
     );
   }
 }

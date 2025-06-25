@@ -1,4 +1,3 @@
-
 import 'package:dermavsion/scan_pages/account_information.dart';
 import 'package:dermavsion/scan_pages/skin_information.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +5,6 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 import 'log_out.dart';
-
 
 class ProfileScreen extends StatefulWidget {
   static const String routeName = '/profile';
@@ -17,7 +15,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController nameController =
-  TextEditingController(text: "Saleh Fouda");
+      TextEditingController(text: "Saleh Fouda");
   int uploadedPhotosCount = 0;
   int withoutProblemsCount = 0;
   int diagnosedProblemsCount = 0;
@@ -324,9 +322,9 @@ class _OptionItem extends StatelessWidget {
 
   const _OptionItem(
       {required this.icon,
-        required this.title,
-        required this.onTap,
-        this.isLogout = false});
+      required this.title,
+      required this.onTap,
+      this.isLogout = false});
 
   @override
   Widget build(BuildContext context) {

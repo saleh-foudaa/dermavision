@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../models/question_model.dart';
+import '../services/api_service.dart';
+
 class Step3 extends StatefulWidget {
   static String routeName = '/Step3';
 
@@ -10,6 +13,9 @@ class Step3 extends StatefulWidget {
 
 class _Step3State extends State<Step3> {
   String selectedType = '';
+  List<Question> questions = [];
+  bool isLoading = true;
+  String errorMessage = '';
 
   final List<Map<String, String>> skinTypes = [
     {"title": "Oily", "image": "assets/images/Rectangle 960.png"},
@@ -17,6 +23,54 @@ class _Step3State extends State<Step3> {
     {"title": "Normal", "image": "assets/images/Rectangle 980.png"},
     {"title": "Combination", "image": "assets/images/Rectangle 990.png"},
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchQuestions();
+  }
+
+  Future<void> _fetchQuestions() async {
+    try {
+      final fetchedQuestions = await ApiService.getAllQuestions();
+      setState(() {
+        questions = fetchedQuestions;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        errorMessage = 'Failed to load questions: ${e.toString()}';
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _submitAnswer(String answer) async {
+    try {
+      const String userId = 'temp_user_id';
+
+      final response = await ApiService.submitAnswers(
+        userId: userId,
+        answers: [
+          {
+            'questionId':
+                questions.isNotEmpty ? questions[0].id : 'skin_type_question',
+            'answers': [answer],
+          },
+        ],
+      );
+
+      if (response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Skin type saved successfully!')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error saving skin type: ${e.toString()}')),
+      );
+    }
+  }
 
   void _showConfirmationDialog(
       BuildContext context, String skinType, String imagePath) {
@@ -81,6 +135,7 @@ class _Step3State extends State<Step3> {
                           ElevatedButton(
                             onPressed: () {
                               Navigator.pop(context);
+                              _submitAnswer(skinType);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                     content: Text('User confirmed: $skinType')),
@@ -128,6 +183,25 @@ class _Step3State extends State<Step3> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(color: Color(0xff1A766E)),
+        ),
+      );
+    }
+
+    if (errorMessage.isNotEmpty) {
+      return Scaffold(
+        body: Center(
+          child: Text(
+            errorMessage,
+            style: GoogleFonts.inter(fontSize: 18, color: Colors.red),
+          ),
+        ),
+      );
+    }
+
     return SafeArea(
       child: Scaffold(
         body: Stack(
@@ -177,7 +251,9 @@ class _Step3State extends State<Step3> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "What best describes your skin texture?",
+                          questions.isNotEmpty
+                              ? questions[0].text
+                              : "What best describes your skin texture?",
                           style: GoogleFonts.inter(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
@@ -198,7 +274,6 @@ class _Step3State extends State<Step3> {
                           itemBuilder: (context, index) {
                             final skinType = skinTypes[index];
                             bool isSelected = selectedType == skinType["title"];
-
                             return GestureDetector(
                               onTap: () {
                                 setState(() {

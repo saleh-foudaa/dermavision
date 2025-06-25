@@ -1,7 +1,8 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../models/question_model.dart';
+import '../services/api_service.dart';
 
 class Step5 extends StatefulWidget {
   static String routeName = '/step5';
@@ -12,12 +13,63 @@ class Step5 extends StatefulWidget {
 
 class _Step5State extends State<Step5> {
   String selectedSensitivity = '';
+  List<Question> questions = [];
+  bool isLoading = true;
+  String errorMessage = '';
 
   final List<String> sensitivityOptions = [
     "Not Sensitive",
     "Very Sensitive",
     "Slightly Sensitive",
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchQuestions();
+  }
+
+  Future<void> _fetchQuestions() async {
+    try {
+      final fetchedQuestions = await ApiService.getAllQuestions();
+      setState(() {
+        questions = fetchedQuestions;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        errorMessage = 'Failed to load questions: ${e.toString()}';
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _submitAnswer(String answer) async {
+    try {
+      const String userId = 'temp_user_id';
+
+      final response = await ApiService.submitAnswers(
+        userId: userId,
+        answers: [
+          {
+            'questionId':
+                questions.length > 1 ? questions[1].id : 'sensitivity_question',
+            'answers': [answer],
+          },
+        ],
+      );
+
+      if (response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Sensitivity saved successfully!')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error saving sensitivity: ${e.toString()}')),
+      );
+    }
+  }
 
   void _showConfirmationDialog(String option) {
     showDialog(
@@ -34,7 +86,7 @@ class _Step5State extends State<Step5> {
             Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color:Color(0xffE4E7F1),
+                color: Color(0xffE4E7F1),
                 borderRadius: BorderRadius.circular(43.0),
               ),
               child: Column(
@@ -42,12 +94,14 @@ class _Step5State extends State<Step5> {
                   Text(
                     'Are you sure your skin sensitivity is "$option"?',
                     textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 18.0, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.pop(context);
+                      _submitAnswer(option);
                       print('User confirmed: $option');
                     },
                     style: ElevatedButton.styleFrom(
@@ -56,7 +110,8 @@ class _Step5State extends State<Step5> {
                     ),
                     child: const Text(
                       'Sure',
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w600),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -64,7 +119,9 @@ class _Step5State extends State<Step5> {
                     onPressed: () => Navigator.pop(context),
                     child: const Text(
                       'Cancel',
-                      style: TextStyle(color: Color(0xff199A8E), fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                          color: Color(0xff199A8E),
+                          fontWeight: FontWeight.w600),
                     ),
                   ),
                 ],
@@ -93,8 +150,8 @@ class _Step5State extends State<Step5> {
             Icon(
               isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
               color: const Color(0xff1A766E),
-              size: 25,),
-            // const SizedBox(width: 8),
+              size: 25,
+            ),
             Expanded(
               child: Text(
                 option,
@@ -111,8 +168,28 @@ class _Step5State extends State<Step5> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(color: Color(0xff1A766E)),
+        ),
+      );
+    }
+
+    if (errorMessage.isNotEmpty) {
+      return Scaffold(
+        body: Center(
+          child: Text(
+            errorMessage,
+            style: GoogleFonts.inter(fontSize: 18, color: Colors.red),
+          ),
+        ),
+      );
+    }
+
     return SafeArea(
       child: Scaffold(
         body: Stack(
@@ -143,7 +220,6 @@ class _Step5State extends State<Step5> {
                       fit: BoxFit.cover,
                     ),
                   ),
-
                   Container(
                     width: 350,
                     height: 318,
@@ -160,7 +236,9 @@ class _Step5State extends State<Step5> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          "How sensitive is your skin?",
+                          questions.length > 1
+                              ? questions[1].text
+                              : "How sensitive is your skin?",
                           textAlign: TextAlign.start,
                           style: GoogleFonts.inter(
                             fontSize: 20,
@@ -171,9 +249,11 @@ class _Step5State extends State<Step5> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Expanded(child: _buildOption(sensitivityOptions[0])),
+                            Expanded(
+                                child: _buildOption(sensitivityOptions[0])),
                             const SizedBox(width: 8),
-                            Expanded(child: _buildOption(sensitivityOptions[1])),
+                            Expanded(
+                                child: _buildOption(sensitivityOptions[1])),
                           ],
                         ),
                         const SizedBox(height: 12),

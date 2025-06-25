@@ -1,21 +1,20 @@
-import 'package:dermavsion/register/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:page_transition/page_transition.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../TabbarPages/tab1.dart';
 import '../TabbarPages/tab2.dart';
+import 'login_screen.dart';
 
 class forgot_pass extends StatefulWidget {
   const forgot_pass({Key? key}) : super(key: key);
 
   @override
-  _TabBarExampleState createState() => _TabBarExampleState();
+  _forgot_passState createState() => _forgot_passState();
 }
 
-class _TabBarExampleState extends State<forgot_pass>
+class _forgot_passState extends State<forgot_pass>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
 
@@ -40,111 +39,74 @@ class _TabBarExampleState extends State<forgot_pass>
           icon: Container(
               height: MediaQuery.of(context).size.height * 0.06,
               width: MediaQuery.of(context).size.width * 0.06,
-              child: Icon(Icons.arrow_back_ios_new_outlined)),
+              child: const Icon(Icons.arrow_back_ios_new_outlined)),
           onPressed: () {
             Navigator.push(
                 context,
                 PageTransition(
-                    type: PageTransitionType.topToBottom,
-                    child: Loginscreen()));
+                    type: PageTransitionType.leftToRight,
+                    child: const Loginscreen()));
           },
         ),
+        centerTitle: true,
+        title: Text(
+          "Forgot Password",
+          style: GoogleFonts.inter(
+            color: Colors.black87,
+            fontSize: 22.sp,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0,
+          ),
+        ),
+        toolbarHeight: 110,
         backgroundColor: Colors.white,
-        toolbarHeight: 80,
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30),
+        child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    "Forgot your password?",
-                    style: GoogleFonts.poppins(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.w600,
+              Container(
+                height: MediaQuery.of(context).size.height * 0.07,
+                width: MediaQuery.of(context).size.width * 0.9,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
+                  color: const Color.fromARGB(255, 241, 241, 241),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(5),
+                  child: TabBar(
+                    indicator: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(25),
                     ),
-                  )
-                ],
+                    indicatorColor: const Color.fromARGB(255, 241, 241, 241),
+                    unselectedLabelColor: Colors.grey,
+                    labelColor: const Color.fromARGB(255, 26, 118, 110),
+                    controller: tabController,
+                    tabs: const [
+                      Tab(
+                        text: "Email",
+                      ),
+                      Tab(
+                        text: "Phone",
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
               ),
               SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    "Enter your email or your phone number, we\nwill send you confirmation code",
-                    style: GoogleFonts.poppins(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black54),
-                  )
-                ],
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height,
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 50,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Container(
-                        // height: 50,
-                        width: MediaQuery.of(context).size.height,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              color: Color.fromARGB(255, 235, 235, 235)),
-                          color: Color.fromARGB(255, 241, 241, 241),
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(5),
-                              child: TabBar(
-                                indicator: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(25),
-                                ),
-                                indicatorColor:
-                                    const Color.fromARGB(255, 241, 241, 241),
-                                unselectedLabelColor: Colors.grey,
-                                labelColor:
-                                    const Color.fromARGB(255, 3, 190, 150),
-                                controller: tabController,
-                                tabs: [
-                                  Tab(
-                                    text: "Email",
-                                  ),
-                                  Tab(
-                                    text: "Phone",
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Expanded(
-                        child: TabBarView(
-                            controller: tabController,
-                            children: [tab1(), tab2()]))
-                  ],
-                ),
+                height: MediaQuery.of(context).size.height * 0.5,
+                child: TabBarView(
+                    controller: tabController,
+                    children: const [tab1(), tab2()]),
               ),
             ],
           ),

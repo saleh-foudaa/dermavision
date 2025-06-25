@@ -1,9 +1,7 @@
-import 'dart:ffi';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 
 class Step1 extends StatelessWidget {
   static String routeName = '/step1';
@@ -34,13 +32,12 @@ class Step1 extends StatelessWidget {
                 children: [
                   Container(
                     width: 310,
-                    
+
                     // width: MediaQuery.of(context).size.width * 0.8,
                     height: 500,
 
                     decoration: BoxDecoration(
                       color: Color(0xffF5F7FF),
-
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Padding(

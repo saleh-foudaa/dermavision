@@ -1,9 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
-import '../scan_pages/HomePage.dart';
 
 class ManualScreen extends StatelessWidget {
   static const String routeName = '/manual';
@@ -44,7 +41,6 @@ class ManualScreen extends StatelessWidget {
         child: Center(
           child: Container(
             width: 550,
-
             height: 570,
             decoration: BoxDecoration(
               color: Colors.white,
@@ -106,7 +102,8 @@ class ManualScreen extends StatelessWidget {
             type: BottomNavigationBarType.fixed,
             items: const [
               BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-              BottomNavigationBarItem(icon: Icon(Icons.menu_book), label: 'Manual'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.menu_book), label: 'Manual'),
               BottomNavigationBarItem(icon: SizedBox.shrink(), label: ''),
               BottomNavigationBarItem(
                   icon: Icon(Icons.calendar_today), label: 'Calendar'),
@@ -137,7 +134,7 @@ class ManualScreen extends StatelessWidget {
                       context: context,
                       shape: const RoundedRectangleBorder(
                         borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(24)),
+                            BorderRadius.vertical(top: Radius.circular(24)),
                       ),
                       builder: (context) {
                         return Padding(
